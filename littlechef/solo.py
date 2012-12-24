@@ -33,23 +33,28 @@ BASEDIR = os.path.abspath(os.path.dirname(__file__).replace('\\', '/'))
 def install(distro_type, distro, gems, version, stop_client):
     """Calls the appropriate installation function for the given distro"""
     with credentials():
-        if distro_type == "debian":
-            if gems == "yes":
-                _gem_apt_install()
-            else:
-                _apt_install(distro, version, stop_client)
-        elif distro_type == "rpm":
-            if gems == "yes":
-                _gem_rpm_install()
-            else:
-                _rpm_install()
-        elif distro_type == "gentoo":
-            _emerge_install()
-        elif distro_type == "pacman":
-            _gem_pacman_install()
-        else:
-            abort('wrong distro type: {0}'.format(distro_type))
+        _opscode_rpm_chef_install()
+        # if distro_type == "debian":
+        #     if gems == "yes":
+        #         _gem_apt_install()
+        #     else:
+        #         _apt_install(distro, version, stop_client)
+        # elif distro_type == "rpm":
+        #     if gems == "yes":
+        #         _gem_rpm_install()
+        #     else:
+        #         _rpm_install()
+        # elif distro_type == "gentoo":
+        #     _emerge_install()
+        # elif distro_type == "pacman":
+        #     _gem_pacman_install()
+        # else:
+        #     abort('wrong distro type: {0}'.format(distro_type))
 
+def _opscode_rpm_chef_install():
+    """Install chef with opscode installer rpm installer"""
+    with show('running'):
+        sudo('wget -O - http://opscode.com/chef/install.sh | sudo bash')
 
 def configure(current_node=None):
     """Deploy chef-solo specific files"""
